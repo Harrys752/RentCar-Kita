@@ -9,3 +9,10 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+body { background: #f6f8fb; color: #1f2937; }
+.navbar-brand { letter-spacing: 0.2px; }
+.card { border: 0; border-radius: 10px; }
+.table > thead > tr > th { border-top: 0; }
+.btn-warning.text-white { color: #fff !important; }
+
