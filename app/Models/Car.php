@@ -14,6 +14,7 @@ class Car extends Model
     'gas',
     'capacity',
     'price_per_day',
+    'foto'
 ];
 
 }

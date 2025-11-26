@@ -20,6 +20,7 @@ return new class extends Migration
         $table->string('gas', 255);
         $table->integer('capacity');
         $table->integer('price_per_day');
+        $table->string('foto')->nullable();
         $table->timestamps();
     });
 }

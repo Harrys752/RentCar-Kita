@@ -51,8 +51,8 @@
 
       <div class="mb-3">
         <label class="form-label">Gambar Mobil</label>
-        <input type="file" name="image" class="form-control @error('image') is-invalid @enderror">
-        @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        <input type="file" name="foto" class="form-control @error('foto') is-invalid @enderror">
+        @error('foto')<div class="invalid-feedback">{{ $message }}</div>@enderror
       </div>
 
       <button class="btn btn-primary">Simpan</button>

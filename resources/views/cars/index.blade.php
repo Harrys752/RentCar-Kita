@@ -40,8 +40,8 @@
           <tr>
             <td>{{ $loop->iteration }}</td>
             <td>
-  @if($car->image)
-    <img src="{{ asset('storage/'.$car->image) }}" alt="{{ $car->brand }}" class="img-thumbnail" style="width:120px;">
+  @if($car->foto)
+    <img src="{{ asset('storage/cars/'.$car->foto) }}" alt="{{ $car->brand }}" class="img-thumbnail" style="width:120px;">
 
     <span class="text-muted">Tidak ada</span>
   @endif

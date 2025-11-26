@@ -27,7 +27,7 @@
                         @forelse ($cars as $car)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td><strong>{{ $car->number }}</strong></td>
+                                <td><strong>{{ $car->number }}</strong></td>`
                                 <td>{{ $car->brand }}</td>
                                 <td>{{ $car->type }}</td>
                                 <td>{{ $car->year }}</td>

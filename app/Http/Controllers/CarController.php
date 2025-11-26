@@ -12,8 +12,8 @@ class CarController extends Controller
     {
         $query = $request->q;
         $cars = Car::when($query, function($q) use ($query){
-            $q->where('brand','like',"%$query%")
-              ->orWhere('number','like',"%$query%");
+            $q->where('brand', 'like', "%$query%")
+              ->orWhere('number', 'like', "%$query%");
         })->get();
 
         return view('cars.index', compact('cars'));
@@ -25,29 +25,41 @@ class CarController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'number' => 'required|max:50',
-        'brand' => 'required',
-        'type' => 'required',
-        'year' => 'required|integer|min:1900|max:' . date('Y'),
-        'gas' => 'required',
-        'capacity' => 'required|integer|min:1',
-        'price_per_day' => 'required|integer|min:10000',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048', // max 2MB
-    ]);
+    {
+        $request->validate([
+            'number' => 'required|max:50',
+            'brand' => 'required',
+            'type' => 'required',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'gas' => 'required',
+            'capacity' => 'required|integer|min:1',
+            'price_per_day' => 'required|integer|min:10000',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
 
-    $data = $request->all();
+        $car = new Car();
 
-    if($request->hasFile('image')){
-        $data['image'] = $request->file('image')->store('cars', 'public'); // simpan path ke DB
+    $car->number = $request->number;
+    $car->brand = $request->brand;
+    $car->type = $request->type;
+    $car->year = $request->year;
+    $car->gas = $request->gas;
+    $car->capacity = $request->capacity;
+    $car->price_per_day = $request->price_per_day;
+
+        if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/cars', $filename);
+
+        $car->foto = $filename;
     }
 
-    Car::create($data);
+    // INI DIA YANG LO TANYA
+    $car->save();
 
-    return redirect()->route('cars.index')->with('success', 'Mobil berhasil ditambah!');
-}
-
+    return redirect()->route('cars.index')->with('success','Mobil berhasil ditambahkan!');
+    }
 
     public function show(Car $car)
     {
@@ -60,40 +72,42 @@ class CarController extends Controller
     }
 
     public function update(Request $request, Car $car)
-{
-    $request->validate([
-        'number' => 'required|max:50',
-        'brand' => 'required',
-        'type' => 'required',
-        'year' => 'required|integer|min:1900|max:' . date('Y'),
-        'gas' => 'required',
-        'capacity' => 'required|integer|min:1',
-        'price_per_day' => 'required|integer|min:10000',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-    ]);
+    {
+        $request->validate([
+            'number' => 'required|max:50',
+            'brand' => 'required',
+            'type' => 'required',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'gas' => 'required',
+            'capacity' => 'required|integer|min:1',
+            'price_per_day' => 'required|integer|min:10000',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
 
-    $data = $request->all();
+        $data = $request->except('foto');
 
-    if($request->hasFile('image')){
-        // hapus gambar lama kalau ada
-        if($car->image && file_exists(storage_path('app/public/'.$car->image))){
-            unlink(storage_path('app/public/'.$car->image));
-        }
-        $data['image'] = $request->file('image')->store('cars', 'public');
-    }
+        if ($request->hasFile('foto')) {
+    $file = $request->file('foto');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $file->storeAs('public/cars', $filename);
 
-    $car->update($data);
-
-    return redirect()->route('cars.index')->with('success', 'Data mobil berhasil diupdate!');
+    $car->foto = $filename;
 }
 
 
+        $car->update($data);
+
+        return redirect()->route('cars.index')->with('success', 'Data mobil berhasil diupdate!');
+    }
+
     public function destroy(Car $car)
     {
-        if($car->image && Storage::disk('public')->exists($car->image)){
-            Storage::disk('public')->delete($car->image);
+        if ($car->foto && Storage::disk('public')->exists($car->foto)) {
+            Storage::disk('public')->delete($car->foto);
         }
+
         $car->delete();
-        return redirect()->route('cars.index')->with('success','Mobil dihapus.');
+
+        return redirect()->route('cars.index')->with('success', 'Mobil dihapus.');
     }
 }
